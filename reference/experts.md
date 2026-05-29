@@ -16,11 +16,16 @@ predictable cost (token spend explains ~80% of multi-agent performance variance 
 | Analyst (Intake/Validate) | `analyst` | Opus | objective | `brief.md` (incl. `## Validation`) |
 | Architect (Plan/Explore) | `architect` | Opus | brief, README map | `plan.md` (incl. architecture + contracts) |
 | Builder | `executor` | Sonnet (Opus if novel/algorithmic) | plan | code + `claims.md` entry |
-| Verifier (adversary) | `verifier` / `critic` | Opus | `claims.md` + code only | `verification.md` verdicts |
+| Verifier (adversary) | `verifier` / `critic` | Opus | `claims.md` + source only (harness-enforced — see below) | `verification.md` verdicts |
 | Security reviewer | `security-reviewer` | Sonnet | diff | findings |
 | Code reviewer | `code-reviewer` | Sonnet | diff + `plan.md` | findings |
 | QA | `qa-tester` | Sonnet | running app | `verification.md` (`## QA`) |
 | Debugger (DEBUG mode) | `debugger` / `tracer` | Opus | repo, repro | root cause to `README.md` |
+
+**Verifier read-scope isolation** is harness-enforced: dispatch the Verifier subagent with
+`allowedTools` (or an equivalent read-allowlist) restricted to `claims.md` and the source paths
+listed there. `plan.md` and `brief.md` must not be in the allowlist. Instruction-only isolation is
+insufficient — a subagent can read any file it can reach unless the harness blocks it.
 
 Architect/editor split inside Build (Aider architect-mode evidence, directional): the architect
 produces the diff intent / plan, the executor emits the actual edits. A reasoning pass plans, a

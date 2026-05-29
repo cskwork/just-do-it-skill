@@ -22,10 +22,63 @@ three that stay separate are load-bearing for builder ≠ verifier; the rest are
 | `plan.md` | Architect (DEBUG: from Diagnose) | **frozen once written** | the slice plan with per-slice acceptance checks, plus **Architecture** and **Contracts** sections (stack, codebase map, interfaces). DEBUG: the approved root-cause + fix plan. **Required by the gate in every mode.** |
 | `claims.md` | Builder | **append-only, UNTRUSTED** | one entry per slice: what was done + a `run-to-prove` command |
 | `verification.md` | Verifier (+ QA) | append-only | per-claim lines `claim <id>: GREEN\|RED` + evidence, then ONE aggregate `verdict: GREEN` (or `verdict: RED`); plus a **`## QA`** section with black-box results. The gate reads the aggregate; on re-verify, rewrite so no line-start `verdict: RED` lingers |
-| `state.json` | orchestrator | live (machine) | mode, current phase, per-phase cycle counters (keys vary by mode), error signatures, `go_decision`, `approval` (set when a human approves the fix/build plan — required before the first write in DEBUG/LEGACY). See `templates/state.json` |
+| `state.json` | orchestrator | live (machine) | mode, current phase, per-phase cycle counters, error signatures, `go_decision`, `plan_hash`, `approval`, `circuit_breaker_threshold`. See `templates/state.json` and field docs below. |
 
 Merged in (no information lost): `validation.md` → brief's `## Validation`; `architecture.md` +
 `contracts.md` → plan sections; `qa-report.md` → verification's `## QA`; `decisions.log` → `README.md`.
+
+## `state.json` field reference
+
+### `cycles`
+A fixed-key object covering all phases (one source of truth across modes — keys do NOT vary by mode):
+
+```json
+"cycles": {
+  "intake": 0, "validate": 0, "plan": 0, "build": 0,
+  "verify": 0, "qa": 0, "deliver": 0,
+  "reproduce": 0, "diagnose": 0, "fix": 0, "explore": 0
+}
+```
+
+Increment the relevant key on each rewind into that phase. Phases not used by the active mode stay at 0.
+
+### `error_signatures`
+A map from normalized error signature → integer count, managed by `templates/circuit-breaker.mjs`.
+
+**Normalization rule**: take the first failing assertion message + `file:line` from the stack trace,
+lowercase it, and strip everything after the first `at ` frame (stack-trim). This produces a stable,
+short key across runs regardless of transient output noise.
+
+```json
+"error_signatures": {
+  "assertionerror: expected 200 but got 401 auth.spec.ts:42": 2
+}
+```
+
+`circuit_breaker_threshold` (default `3`): when a signature count reaches this value,
+`circuit-breaker.mjs` exits 1 (TRIP) and the orchestrator halts the fix loop.
+
+### `plan_hash`
+Recorded by the orchestrator on Plan phase exit: `shasum -a 256 plan.md` stored as a hex string.
+Before Deliver opens, the orchestrator re-hashes `plan.md` and compares. A mismatch **fails the
+gate** unless `README.md` contains a logged re-plan step (keyword: `RE-PLAN:`).
+
+```json
+"plan_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4da..."
+```
+
+### `approval`
+`null` until a human explicitly approves the fix/build plan (required before the first source-tree
+write in DEBUG and LEGACY modes). Once set, the canonical shape is:
+
+```json
+"approval": { "phase": "<phase-name>", "status": "APPROVED" }
+```
+
+No source-tree write occurs while `approval` is `null`. The field name is fixed — do not use
+ad-hoc variants (`approval_to_build`, `approval_to_fix`, etc.).
+
+---
 
 ## Two rules that make the vault trustworthy
 

@@ -60,35 +60,24 @@ Mode with human approval before the first write**. Details in `reference/pipelin
 These are the spine. Never weaken or skip them; never edit a gate to make it pass
 (`reference/quality-gates.md`).
 
-1. **Validate-before-build** (GREENFIELD): no Build opens until brief.md's `## Validation` section
-   shows real demand evidence, a scoped MVP, and a `Decision: GO`. Kills "nobody wanted this" failures.
+1. **Validate-before-build** (GREENFIELD): Build won't open until `templates/validate-gate.sh <vault>` exits 0 (requires `Decision: GO` in `brief.md`). Details: `reference/quality-gates.md`.
 2. **Plan freezes scope**: `plan.md` is written once and frozen; Build implements it, does not redesign.
 3. **Builder ≠ Verifier**: the agent that writes code does not get to approve it. A fresh **adversarial
    Verify** agent re-runs every `run-to-prove` command in `claims.md` from a clean state.
-4. **Multi-expert review before deliver**: architect + security-reviewer + code-reviewer run in
-   parallel; ALL must approve (`reference/experts.md`).
-5. **Literal delivery gate**: `templates/delivery-gate.sh` must exit 0 — required artifacts present,
-   an aggregate `verdict: GREEN` with no line-start `verdict: RED`, `Decision: GO` for greenfield, and
-   the project's own tests pass. The skill cannot announce "done" otherwise.
-6. **Bounded retry + circuit breaker**: max 5 fix cycles per phase; the SAME error 3× → stop, write
-   the root cause to the run's `README.md`, escalate to the user. Never loop forever.
+4. **Multi-expert review before deliver**: architect + security-reviewer + code-reviewer run in parallel; ALL must approve (`reference/experts.md`).
+5. **Literal delivery gate**: `templates/delivery-gate.sh` must exit 0 — required artifacts present, aggregate `verdict: GREEN`, `Decision: GO` for greenfield, project tests pass. Skill cannot announce "done" otherwise.
+6. **Bounded retry + circuit breaker**: max 5 fix cycles per phase; the same normalized error signature 3x trips `templates/circuit-breaker.mjs` → stop, root-cause to user. Mechanism: `reference/vault.md`.
 
 ## The vault (only cross-phase state)
 
 Every run creates `docs/changelog/<date>-<slug>/` in the target repo — the single blackboard every
 phase reads from and writes to, committed as the run's permanent changelog. Phases run as fresh
 subagent contexts, so the vault is how they communicate. Full contract in `reference/vault.md`.
-Six files: `README.md` (audit log), `brief.md` (incl. `## Validation` + `Decision:` for greenfield),
-`plan.md` (frozen; incl. architecture + contracts), `claims.md` (append-only, untrusted),
-`verification.md` (verdicts + `## QA`), `state.json`.
+Six files: `README.md`, `brief.md`, `plan.md`, `claims.md`, `verification.md`, `state.json`. Per-file contracts: `reference/vault.md`.
 
 ## Expert roster
 
-Roles are dispatched as subagents, each a fresh context with the minimum vault read-set (role
-separation by read-scope). Model tier is matched to task complexity (Haiku/Sonnet/Opus). See
-`reference/experts.md` for the dispatch table, parallel-wave rules, and which existing agent type
-(`analyst`, `architect`, `executor`, `security-reviewer`, `code-reviewer`, `qa-tester`, `debugger`,
-`verifier`) plays each role.
+Roles are dispatched as subagents, each a fresh context with the minimum vault read-set. Verifier is `allowedTools`-scoped to `claims.md` + source only (`reference/experts.md`). See `reference/experts.md` for the full dispatch table, parallel-wave rules, and agent types.
 
 ## Reference map (progressive disclosure — load only what the current phase needs)
 
@@ -101,9 +90,17 @@ separation by read-scope). Model tier is matched to task complexity (Haiku/Sonne
 | `reference/quality-gates.md` | Verify, Review, and Deliver phases — what "production-ready" means |
 | `reference/debugging.md` | DEBUG mode Diagnose phase — hypothesis-driven root-cause method |
 
+### Template scripts (referenced by the gates above)
+
+| Script | Gate |
+|---|---|
+| `templates/delivery-gate.sh` | Deliver — hard exit-0 check for artifacts + tests |
+| `templates/validate-gate.sh <vault>` | GREENFIELD Validate — machine-checks `Decision: GO` in `brief.md` before Build opens |
+| `templates/circuit-breaker.mjs <state.json> <sig>` | Each failed fix cycle — trips at 3 identical normalized error signatures |
+
 ## Escalation & stop conditions
 
-- Circuit breaker tripped (same error 3×) → stop, root-cause to user.
+- Circuit breaker tripped (`circuit-breaker.mjs` exits 1) → stop, root-cause to user.
 - Validate phase finds no demand evidence (GREENFIELD) → stop, report; do not build on spec.
 - Delivery gate cannot pass after fixes → report exactly which check fails; never fake the gate.
 - Destructive or irreversible step needed (drop data, force-push, external publish) → ask first.

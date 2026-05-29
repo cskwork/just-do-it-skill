@@ -7,6 +7,7 @@
   "phases_completed": [],
   "go_decision": null,
   "approval": null,
+  "plan_hash": null,
   "cycles": { "Build": 0, "Verify": 0, "QA": 0, "Fix": 0 },
   "max_cycles_per_phase": 5,
   "error_signatures": {},

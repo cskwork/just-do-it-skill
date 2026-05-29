@@ -36,12 +36,12 @@ Log every skip to `README.md`.
 | Phase | Goal | Reads | Writes | Exit gate (must pass to advance) |
 |---|---|---|---|---|
 | **Intake** | Turn objective into a brief (goal, audience, done-criteria, non-goals) | objective | `brief.md`, `state.json` | `brief.md` has explicit, machine-checkable acceptance criteria |
-| **Validate** | Prove real demand + scope an MVP (see `market-research.md`) | `brief.md` | `brief.md` (`## Validation`) | the `## Validation` section ends with exactly one `Decision: GO` / `Decision: NO-GO` line. **NO-GO → stop, report.** Do not build on spec |
-| **Plan** | Decompose into independently-testable slices; choose stack; define contracts | `brief.md` | `plan.md` (frozen; incl. Architecture + Contracts sections) | `plan.md` task table exists, every slice ≤5 files / ≤~500 lines, each has an acceptance check |
+| **Validate** | Prove real demand + scope an MVP (see `market-research.md`) | `brief.md` | `brief.md` (`## Validation`) | `templates/validate-gate.sh <vault>` exits 0 — the script checks that `brief.md` contains a line-start or `## `-prefixed `Decision: GO`; **NO-GO or no GO line exits non-zero, Build does not open**. Machine-checkable parallel to `delivery-gate.sh`. |
+| **Plan** | Decompose into independently-testable slices; choose stack; define contracts | `brief.md` | `plan.md` (frozen; incl. Architecture + Contracts sections) | `plan.md` task table exists, every slice ≤5 files / ≤~500 lines, each has an acceptance check. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
 | **Build** | Implement each slice (architect→editor split); write a claim per slice | `plan.md` | code, `claims.md` (append-only) | local tests for the slice pass + a `claims.md` entry with a `run-to-prove` command |
 | **Verify** | Adversary re-runs every claim from clean state (see `quality-gates.md`) | `claims.md`, code | `verification.md` | every claim GREEN, ending in one aggregate `verdict: GREEN` line (no line-start `verdict: RED`); any RED rewinds to Build |
 | **QA** | Black-box exercise the running app (conditional on app type) | running app | `verification.md` (`## QA`) | golden + edge + a11y pass for browser apps; CLI/lib: integration smoke passes |
-| **Deliver** | Run the literal gate; package | all | commit / PR | `templates/delivery-gate.sh` exits 0 — paste output |
+| **Deliver** | Run the literal gate; package | all | commit / PR | plan-hash matches (see `reference/vault.md`). Then `templates/delivery-gate.sh` exits 0 — paste output. |
 
 ---
 
@@ -76,11 +76,11 @@ through Explore; approval before Build.
 |---|---|---|---|---|
 | **Intake** | Feature spec + acceptance criteria | objective | `brief.md` | acceptance criteria stated |
 | **Explore** | Map the affected code with file:line evidence (use `explore` skill/agent) | repo | `README.md` (codebase map + citations) | entry points, call paths, blast radius documented with citations |
-| **Plan** | Surgical change plan: smallest blast radius, reuse existing utilities | map | `plan.md` (frozen) | plan touches only what the feature requires; reuse noted; **human approves** |
+| **Plan** | Surgical change plan: smallest blast radius, reuse existing utilities | map | `plan.md` (frozen) | plan touches only what the feature requires; reuse noted; **human approves**. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
 | **Build** | Implement matching existing style; no unrelated refactors | plan | code, `claims.md` | slice tests pass; no formatting/rename churn in unrelated files |
 | **Verify** | Adversary re-runs claims; full existing suite must stay green | claims, suite | `verification.md` | all claims GREEN + pre-existing suite still GREEN (no regressions) |
 | **QA** | Exercise the new feature + smoke the surrounding flows | running app | `verification.md` (`## QA`) | feature works + adjacent flows unbroken |
-| **Deliver** | Gate + package | all | commit / PR | `delivery-gate.sh` exits 0 |
+| **Deliver** | Gate + package | all | commit / PR | plan-hash matches (see `reference/vault.md`). Then `delivery-gate.sh` exits 0. |
 
 ---
 
@@ -88,7 +88,7 @@ through Explore; approval before Build.
 
 - Verify RED or QA fail → rewind to Build/Fix with the specific failure.
 - **Max 5 fix cycles per phase.** Same error signature 3× → STOP, write root cause to the run's
-  `README.md`, escalate to user (from autopilot/ultraqa circuit breaker). Never loop forever.
+  `README.md`, escalate to user. Mechanism: `reference/vault.md` (`error_signatures` + `circuit_breaker_threshold`).
 - Each phase runs as a **fresh subagent context** that reads only its allowed vault files
   (role separation by read-scope) and returns a **compressed summary**, never its raw transcript
   (the converged 2026 orchestrator pattern — flowhunt.io; LangChain; Anthropic multi-agent system).

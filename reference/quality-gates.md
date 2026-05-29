@@ -19,6 +19,10 @@ and **must never edit the gate to make it pass** (oh-my-symphony Deliver-gate in
 real output as evidence. The script runs the suite in the **current workspace** — it does not create
 an isolated sandbox; reproducing from a genuinely clean state is the Verify agent's job (below).
 
+**GREENFIELD Validate gate** (mirrors the delivery gate, but at pipeline entry): `templates/validate-gate.sh <vault>` exits 0 only when `brief.md` contains a `Decision: GO` line. NO-GO or absence exits non-zero — Build does not open. Never edit it to pass.
+
+**Plan-freeze check** (enforced at Deliver entry): plan-hash must match `state.json.plan_hash` (see `reference/vault.md`). A mismatch fails the gate unless `README.md` contains a logged re-plan step.
+
 ### 2. Soft gate — quality (LLM rubric / committee)
 A committee of reviewers with distinct mandates (correctness / security / maintainability) scores
 quality, readability, and security that tests can't capture — a diverse committee finds more defects
