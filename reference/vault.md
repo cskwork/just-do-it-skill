@@ -26,6 +26,8 @@ three that stay separate are load-bearing for builder ≠ verifier; the rest are
 
 Merged in (no information lost): `validation.md` → brief's `## Validation`; `architecture.md` +
 `contracts.md` → plan sections; `qa-report.md` → verification's `## QA`; `decisions.log` → `README.md`.
+When consolidating an existing pre-6-file vault, remove the merged legacy files with `git rm` (not
+`rm`) — it stages the deletion and still works in sandboxes/restricted shells where bare `rm` is blocked.
 
 ## `state.json` field reference
 
