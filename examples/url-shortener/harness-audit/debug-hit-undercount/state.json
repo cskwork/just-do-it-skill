@@ -1,0 +1,15 @@
+{
+  "objective": "DEBUG: URL shortener undercounts hits on popular links under concurrency",
+  "slug": "debug-hit-undercount",
+  "mode": "DEBUG",
+  "topology": "single-driver (deep-and-narrow root cause); read-only Plan Mode until approval",
+  "current_phase": "Verify",
+  "phases_completed": ["Intake", "Reproduce", "Diagnose", "Fix"],
+  "cycles": { "Reproduce": 1, "Diagnose": 1, "Fix": 1, "Verify": 0 },
+  "max_cycles_per_phase": 5,
+  "circuit_breaker_threshold": 3,
+  "approval_to_fix": "APPROVED (minimal fix)",
+  "root_cause": "incrementHit read hoisted outside the enqueue() mutex -> lost-update race on concurrent hits",
+  "started_at": "2026-05-29T23:40:00+09:00",
+  "updated_at": "2026-05-29T23:55:00+09:00"
+}

@@ -1,0 +1,15 @@
+{
+  "objective": "LEGACY: add optional link expiry (TTL) to the URL shortener",
+  "slug": "legacy-link-expiry",
+  "mode": "LEGACY",
+  "topology": "single-driver + read-only Explore; approval before Build",
+  "current_phase": "Deliver",
+  "phases_completed": ["Intake", "Explore", "Plan", "Build", "Verify", "Review"],
+  "cycles": { "Build": 1, "Verify": 1, "QA": 1, "Fix": 0 },
+  "max_cycles_per_phase": 5,
+  "circuit_breaker_threshold": 3,
+  "approval_to_build": "APPROVED (expired -> 410 Gone, lazy, check-before-increment)",
+  "committee": "security APPROVE, code-review APPROVE (LOW only)",
+  "started_at": "2026-05-30T00:10:00+09:00",
+  "updated_at": "2026-05-30T00:45:00+09:00"
+}

@@ -1,0 +1,16 @@
+{
+  "objective": "<verbatim objective the user gave>",
+  "slug": "<kebab-case-of-objective>",
+  "mode": "GREENFIELD | DEBUG | LEGACY",
+  "topology": "fan-out | single-driver",
+  "current_phase": "Intake",
+  "phases_completed": [],
+  "go_decision": null,
+  "cycles": { "Build": 0, "Verify": 0, "QA": 0, "Fix": 0 },
+  "max_cycles_per_phase": 5,
+  "error_signatures": {},
+  "circuit_breaker_threshold": 3,
+  "skipped_phases": [],
+  "started_at": "<ISO-8601, stamped by the orchestrator>",
+  "updated_at": "<ISO-8601>"
+}

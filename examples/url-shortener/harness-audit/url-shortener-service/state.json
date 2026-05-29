@@ -1,0 +1,17 @@
+{
+  "objective": "build a production-grade URL shortener HTTP service and ship it",
+  "slug": "url-shortener-service",
+  "mode": "GREENFIELD",
+  "topology": "single-driver (one cohesive service = deep-narrow); committee reviewers fan out",
+  "current_phase": "Deliver",
+  "phases_completed": ["Intake", "Validate", "Plan", "Build", "Verify", "QA", "Review"],
+  "go_decision": "GO",
+  "cycles": { "Build": 3, "Verify": 3, "QA": 1, "Fix": 2 },
+  "max_cycles_per_phase": 5,
+  "error_signatures": { "ssrf-bypass-v1": 1, "malformed-path-500": 1 },
+  "circuit_breaker_threshold": 3,
+  "skipped_phases": [],
+  "known_low_residuals": ["NAT64 64:ff9b::/96 maps embedded private v4", "::ffff:0.0.0.0 mapped wildcard accepted"],
+  "started_at": "2026-05-29T22:20:00+09:00",
+  "updated_at": "2026-05-29T23:15:00+09:00"
+}
