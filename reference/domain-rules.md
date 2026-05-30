@@ -27,6 +27,17 @@ The conductor injects the **role-relevant subset** into each subagent's locked p
 - **Committee (architect / code-reviewer)** — confirm the diff respects them; flag violations as findings.
 - **NOT the Verifier** — it stays claims + source only; rules are not a pass/fail gate.
 
+## Verify coverage checklist (gated — distinct from the advisory digest)
+
+The Priority Rules digest above is advisory. Verify ALSO derives a **coverage checklist** from the same
+domain routing — the concrete property/risk classes for **that** domain, whatever `ten-rules` surfaces:
+a UI objective → a11y + responsive + error/empty states; a data pipeline → idempotency + schema
+evolution + PII; an API → every error path + auth ordering; a security-sensitive input → the full
+bypass family (the SSRF example in `quality-gates.md`). Unlike the digest, this checklist **is**
+reflected in the gated **`## Coverage`** section of `verification.md` (`reference/quality-gates.md`):
+every item is mapped to evidence or named under `Not covered:` with a justification. The digest shapes
+quality; the checklist bounds verification completeness so a property is never dropped by silence.
+
 ## Conservative update
 
 The digest is frozen-ish: refine only when the objective or plan materially changes, keep rules

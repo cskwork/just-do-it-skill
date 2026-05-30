@@ -210,6 +210,9 @@ Check: `ls docs/changelog/*/` and `git ls-files docs/changelog/`.
   migration notes). Grep: `grep -rnE '(validation|qa-report|architecture|contracts)\.md|decisions\.log' SKILL.md reference/ templates/delivery-gate.sh`.
 - F3: `delivery-gate.sh` passes `bash -n` and the Tier A matrix.
 - F4: landing `docs/index.html` has balanced `<section>`/`</section>` and the vault table lists the 6 files.
+- F5: the gate harness passes — `bash tests/gate-scenarios.test.sh` exits 0 (covers the literal
+  validate / delivery / human-feedback / circuit-breaker scenarios, including the completeness
+  contract: a GREEN verification with no `## Coverage` / `Not covered:` / `Regression tests:` is blocked).
 
 ---
 

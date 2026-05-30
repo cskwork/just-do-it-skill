@@ -21,7 +21,7 @@ three that stay separate are load-bearing for builder ≠ verifier; the rest are
 | `brief.md` | Analyst | frozen per section | goal, audience, acceptance criteria, non-goals + a **`## Validation`** section (demand evidence ending in one `Decision: GO`/`Decision: NO-GO` line — greenfield) |
 | `plan.md` | Architect (DEBUG: from Diagnose) | **frozen once written** | the slice plan with per-slice acceptance checks, plus **Architecture** and **Contracts** sections (stack, codebase map, interfaces). DEBUG: the root-cause + fix plan. Also holds the `## Human Feedback` approval packet. **Required by the gate in every mode.** |
 | `claims.md` | Builder | **append-only, UNTRUSTED** | one entry per slice: what was done + a `run-to-prove` command |
-| `verification.md` | Verifier (+ QA) | append-only | per-claim lines `claim <id>: GREEN\|RED` + evidence, then ONE aggregate `verdict: GREEN` (or `verdict: RED`); plus a **`## QA`** section with black-box results. The gate reads the aggregate; on re-verify, rewrite so no line-start `verdict: RED` lingers |
+| `verification.md` | Verifier (+ QA) | append-only | per-claim lines `claim <id>: GREEN\|RED` + evidence, then ONE aggregate `verdict: GREEN` (or `verdict: RED`); plus a **`## QA`** section with black-box results. The gate reads the aggregate; on re-verify, rewrite so no line-start `verdict: RED` lingers. Also carries a **`## Coverage`** map + a `Not covered:` line + a `Regression tests:` line (completeness contract — gated by `delivery-gate.sh`) |
 | `state.json` | orchestrator | live (machine) | mode, current phase, per-phase cycle counters, error signatures, `go_decision`, `plan_hash`, `approval`, `circuit_breaker_threshold`. See `templates/state.json` and field docs below. |
 
 Merged in (no information lost): `validation.md` → brief's `## Validation`; `architecture.md` +
@@ -126,6 +126,23 @@ files: <paths touched>
 run-to-prove: <exact shell command that exits 0 iff the claim holds, e.g. `npm test -- auth.spec`>
 expected: <what a passing run prints>
 ```
+
+## `verification.md` completeness contract
+
+Beyond per-claim verdicts and the aggregate `verdict:` line, `verification.md` must carry the following
+(line-checked by `delivery-gate.sh` — see `reference/quality-gates.md`):
+
+```
+## Coverage
+<required-coverage list = brief acceptance criteria + domain checklist (reference/domain-rules.md)>
+- <criterion / vuln-class>: <claim id or probe that proved it> — GREEN
+...
+Not covered: <items NOT verified, each justified — or 'none'>
+Regression tests: <permanent tests added for fixed REDs — or 'none' for a verify-only run>
+```
+
+A GREEN verdict asserts only that every *enumerated* item re-verified; the `Not covered:` line is where
+the verifier is forced to surface the gaps it knows of, so they are reviewed rather than hidden.
 
 ## Resumption
 

@@ -86,9 +86,11 @@ These are the spine. Never weaken or skip them; never edit a gate to make it pas
 3. **Human Feedback before implementation**: after the brief, reproduction/diagnosis, and plan are ready, pause for explicit human approval. `plan.md` must contain a top plain-language brief and a lower technical novice-dev brief; `templates/human-feedback-gate.mjs <vault> <Build|Fix>` must pass before Build/Fix opens.
 4. **Builder ≠ Verifier**: the agent that writes code does not get to approve it. A fresh **adversarial
    Verify** agent re-runs every `run-to-prove` command in `claims.md` from a clean state — a fresh
-   `git worktree` at the build commit, never the builder's dirty tree.
+   `git worktree` at the build commit, never the builder's dirty tree. Before the GREEN verdict, a
+   **completeness critic** names what the claim set omits, and **high-severity claims get a ≥3-lens
+   verifier panel** (majority RED → RED). `reference/quality-gates.md`.
 5. **Multi-expert review before deliver**: architect + security-reviewer + code-reviewer run in parallel; ALL must approve (`reference/experts.md`).
-6. **Literal delivery gate**: `templates/delivery-gate.sh` must exit 0 — required artifacts present, aggregate `verdict: GREEN`, `Decision: GO` for greenfield, project tests pass. Skill cannot announce "done" otherwise.
+6. **Literal delivery gate**: `templates/delivery-gate.sh` must exit 0 — required artifacts present, aggregate `verdict: GREEN`, a **`## Coverage` map with `Not covered:` + `Regression tests:` lines** (completeness contract — a GREEN verdict means *every enumerated claim re-verified*, NOT *safe*), `Decision: GO` for greenfield, project tests pass. Skill cannot announce "done" otherwise.
 7. **Bounded retry + circuit breaker**: max 5 fix cycles per phase; the same normalized error signature 3x trips `templates/circuit-breaker.mjs` → stop, root-cause to user. Mechanism: `reference/vault.md`.
 
 ## The vault (only cross-phase state)
@@ -142,6 +144,7 @@ Roles are dispatched as subagents, each a fresh context with the minimum vault r
 - [ ] Plan grounded (`reference/plan-grounding.md`, agent-answered) before the plan froze
 - [ ] Human Feedback stage produced the plain-language and technical briefs, and approval was recorded before Build/Fix
 - [ ] Every `claims.md` entry has a GREEN verdict in `verification.md` from the adversarial pass
+- [ ] `verification.md` carries a `## Coverage` map (acceptance criteria + domain checklist), a `Not covered:` line, and a `Regression tests:` line; a completeness critic found no un-named gap
 - [ ] architect + security + code-review all approved
 - [ ] `delivery-gate.sh` exited 0 — paste the output as evidence
 - [ ] the run's `README.md` captures the key choices and any escalations

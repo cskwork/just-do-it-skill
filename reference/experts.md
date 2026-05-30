@@ -18,6 +18,7 @@ predictable cost (token spend explains ~80% of multi-agent performance variance 
 | Builder | `executor` | Sonnet (Opus if novel/algorithmic) | plan | code + `claims.md` entry |
 | Designer (UI/UX jobs only) | `designer` | Sonnet | `plan.md` + `reference/taste-skill-v2.md` | UI code to taste-skill v2 rules + dial values; `claims.md` entry |
 | Verifier (adversary) | `verifier` / `critic` | Opus | `claims.md` + source only (harness-enforced — see below) | `verification.md` verdicts |
+| Completeness critic | `critic` | Opus | required-coverage list + code (NOT `claims.md` rationale) | gaps → new REDs / justified `Not covered:` entries |
 | Security reviewer | `security-reviewer` | Sonnet | diff | findings |
 | Code reviewer | `code-reviewer` | Sonnet | diff + `plan.md` | findings |
 | QA | `qa-tester` | Sonnet | running app | `verification.md` (`## QA`) + `qa/` evidence (drives the app with agent-browser — `reference/qa.md`) |
@@ -27,6 +28,14 @@ predictable cost (token spend explains ~80% of multi-agent performance variance 
 `allowedTools` (or an equivalent read-allowlist) restricted to `claims.md` and the source paths
 listed there. `plan.md` and `brief.md` must not be in the allowlist. Instruction-only isolation is
 insufficient — a subagent can read any file it can reach unless the harness blocks it.
+
+**Completeness critic & diverse verifier panel.** After per-claim Verify, dispatch a fresh
+`completeness-critic` against the required-coverage list (brief acceptance criteria + domain checklist —
+`reference/quality-gates.md`) to name what is NOT covered; each gap is a new RED or a justified
+`Not covered:` entry. For **high-severity** claims (security / data-loss / concurrency / auth), replace
+the single verifier with a **≥3-verifier panel of distinct lenses** (correctness / security / repro) and
+take majority RED → RED. Diverse lenses beat redundant same-lens votes; cost-gate the panel to
+high-severity claims only.
 
 Architect/editor split inside Build (Aider architect-mode evidence, directional): the architect
 produces the diff intent / plan, the executor emits the actual edits. A reasoning pass plans, a
