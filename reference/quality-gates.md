@@ -39,6 +39,10 @@ on red tests is still a failure.
 the code's intent — re-runs every `run-to-prove` command **from a clean state** and writes
 `verdict: GREEN|RED` to `verification.md`. Any RED rewinds to Build.
 
+**Clean state = a fresh `git worktree`** at the build commit (`git worktree add <tmp> <ref>`), not the
+builder's working tree — it excludes uncommitted edits, stray build artifacts, and local config, so a
+pass proves the *committed* code works. git is already present (no install); remove the worktree after.
+
 ## Validate the suite itself (a green run on a flawed suite is a false done)
 
 Because flawed tests are a real failure mode (59.4% figure above), don't trust a suite blindly:

@@ -69,7 +69,7 @@ Then in Claude Code: `/supergoal <your objective>`.
 
 ```
 SKILL.md            thin spine: mode detection, gates, reference map
-reference/          pipeline · experts · vault · market-research · quality-gates · debugging
+reference/          pipeline · experts · vault · market-research · quality-gates · debugging · qa · domain-rules
 reference/ui-ux.md  UI/UX overlay → taste-skill v2 (reference/taste-skill-v2.md, vendored) as design authority
 templates/          delivery-gate.sh · validate-gate.sh · human-feedback-gate.mjs · state.json
 DESIGN.md           research → decision mapping (cited)
