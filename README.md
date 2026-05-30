@@ -13,7 +13,7 @@ Everything runs in-session with the `Task`/`Agent` tool. **Nothing to install bu
 > — a bilingual (English / 한국어) walkthrough with a 3-step quickstart, the three modes, how the
 > builder-vs-verifier split catches real bugs, and the evidence it produces. Best onboarding path before you clone.
 
-## Three modes
+## Modes
 
 `/supergoal` detects the mode from your objective:
 
@@ -22,6 +22,7 @@ Everything runs in-session with the `Task`/`Agent` tool. **Nothing to install bu
 | "build / ship a new app/tool" | **GREENFIELD** | Intake → **Validate (market/demand)** → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
 | "fix / broken / failing / why does" | **DEBUG** | Intake → Reproduce → Diagnose → **Human Feedback** → Fix → Verify → Deliver |
 | "add X to our existing/legacy code" | **LEGACY** | Intake → Explore → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
+| "explain / understand / teach me X" (learn, no code) | **LEARN** | Intake → Source → Bridge → Teach loop → Check (explain-back) → Journal |
 
 ```text
 /supergoal build a habit-tracker app and ship it
@@ -69,8 +70,9 @@ Then in Claude Code: `/supergoal <your objective>`.
 
 ```
 SKILL.md            thin spine: mode detection, gates, reference map
-reference/          pipeline · experts · vault · market-research · quality-gates · debugging
+reference/          pipeline · experts · vault · market-research · quality-gates · debugging · learn
 reference/ui-ux.md  UI/UX overlay → taste-skill v2 (reference/taste-skill-v2.md, vendored) as design authority
+learn/              LEARN-mode session journals (one file per session) + README template
 templates/          delivery-gate.sh · validate-gate.sh · human-feedback-gate.mjs · state.json
 DESIGN.md           research → decision mapping (cited)
 docs/               research-brief.md · e2e-test-plan.md · changelog/ · index.html (landing)

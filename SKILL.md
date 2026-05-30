@@ -45,9 +45,12 @@ Read the objective and classify it. State the detected mode to the user in one l
 | "build / make / ship / launch a new app/product/site/tool" | **GREENFIELD** | Intake → **Validate** → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
 | "fix / broken / failing / crash / hang / regression / why does" | **DEBUG** | Intake → Reproduce → Diagnose → **Human Feedback** → Fix → Verify → Deliver |
 | "add / integrate X into existing/legacy/our codebase" | **LEGACY** | Intake → Explore → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
+| "explain / understand / teach me / how does X work" (learn, no code change) | **LEARN** | Intake → Source → **Bridge** → Teach loop → **Check (explain-back)** → Journal |
 
 If ambiguous, ask ONE clarifying question, then proceed. Mode picks the pipeline; the gates and the
 vault are identical across modes.
+
+LEARN is the exception: it writes no code and skips the implementation gates — it runs the teach-and-check flow in `reference/learn.md` and journals to `learn/`.
 
 **Topology rule** (the research thesis — task shape, not preference, picks the architecture):
 fan out parallel subagents only for *wide-and-shallow* work (Validate research, scaffolding several
