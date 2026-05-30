@@ -73,3 +73,19 @@ Add **Human Feedback** as a first-class stage before Build/Fix in all `/supergoa
 - Reason: this task is a stronger measure because it requires cross-layer backend diagnosis, mapper
   SQL ordering, service-level context semantics, fallback tests, and distinguishing relevant focused
   checks from noisy full-suite failures.
+
+## Update - domain priority-rules (ten-rules integration)
+
+- Added `reference/domain-rules.md`: at Intake the conductor routes the objective to its `ten-rules`
+  domain(s) and distills a `## Priority Rules` digest (≤10 abstract rules) into the run's `README.md`.
+- Why: domain varies per objective, so the run needs the domain's standards in context from the
+  start. Rules stay abstract and malleable; the conductor updates them conservatively (logged
+  `RULES-UPDATE:`), mirroring `RE-PLAN:`.
+- Advisory by design (user choice): the digest shapes Plan/Build/Review quality and the committee
+  flags violations as findings, but it is **not** machine-checked and never overrides the hard gates.
+- Wiring kept minimal: SKILL.md Step 0 + reference map, one note each in `pipeline.md`, `vault.md`
+  (README `## Priority Rules`), and `experts.md` (locked-prompt `RULES:` line + committee check).
+  Verifier read-scope unchanged (claims + source only); the six-file vault is intact (digest lives in
+  `README.md`).
+- Paired with the `ten-rules` repo, which gained a "Priority digest" convention defining the ≤10
+  abstract-rule output this skill consumes.

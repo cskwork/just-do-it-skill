@@ -17,7 +17,7 @@ three that stay separate are load-bearing for builder ≠ verifier; the rest are
 
 | File | Written by | Mutability | Holds |
 |---|---|---|---|
-| `README.md` | any (orchestrator owns) | append-only | the run narrative + decisions, hypotheses, skips, escalations — the **audit log** and the folder's rendered index |
+| `README.md` | any (orchestrator owns) | append-only | the run narrative + decisions, hypotheses, skips, escalations — the **audit log** and the folder's rendered index; plus a **`## Priority Rules`** block (≤10 abstract domain rules from `ten-rules`, advisory — `domain-rules.md`) |
 | `brief.md` | Analyst | frozen per section | goal, audience, acceptance criteria, non-goals + a **`## Validation`** section (demand evidence ending in one `Decision: GO`/`Decision: NO-GO` line — greenfield) |
 | `plan.md` | Architect (DEBUG: from Diagnose) | **frozen once written** | the slice plan with per-slice acceptance checks, plus **Architecture** and **Contracts** sections (stack, codebase map, interfaces). DEBUG: the root-cause + fix plan. Also holds the `## Human Feedback` approval packet. **Required by the gate in every mode.** |
 | `claims.md` | Builder | **append-only, UNTRUSTED** | one entry per slice: what was done + a `run-to-prove` command |

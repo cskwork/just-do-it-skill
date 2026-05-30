@@ -53,7 +53,8 @@ defects than one generic reviewer (arxiv 2511.16708 Codex-Verify; arxiv 2506.172
 - `code-reviewer` → correctness, tests, style, dead code?
 
 ALL must approve. This is the **soft gate** — it scores quality/security but **can never override a
-failing hard test** (`quality-gates.md`).
+failing hard test** (`quality-gates.md`). Each reviewer also checks the diff against the run's
+`## Priority Rules` (advisory — violations are findings, not a hard fail; `domain-rules.md`).
 
 ## Locked-prompt template (give every dispatched subagent)
 
@@ -61,6 +62,7 @@ failing hard test** (`quality-gates.md`).
 ROLE: <role>. You run in isolation; you cannot see other agents' transcripts.
 READ ONLY THESE VAULT FILES: <list>.   (do not read beyond your scope)
 DO: <the one job>.
+RULES: <role-relevant Priority Rules lines the conductor injects — advisory; omit for the Verifier>.
 WRITE: <exact vault file(s) to append/update>.
 RETURN: a compressed summary (decisions + evidence + file:line), NOT your transcript.
 GATE: <the machine-checkable exit condition for this phase>.

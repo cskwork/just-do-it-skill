@@ -55,6 +55,12 @@ modules). Keep a *single driving agent* for *deep-and-narrow* work — so **DEBU
 single-driver** with isolated helpers only for independent probes. **All modes require Human
 Feedback approval before the first implementation write**. Details in `reference/pipeline.md`.
 
+**Domain routing** (advisory): right after mode detection, route the objective through the
+`ten-rules` skill and distill **≤10 abstract priority rules** for the detected domain(s). Record them
+once in the run's `README.md` (`## Priority Rules`) and carry them into every phase. They shape
+Plan/Build/Review quality; they never replace or override the hard gates. Mechanism:
+`reference/domain-rules.md`.
+
 **UI/UX overlay**: if the objective ships user-facing visual UI (landing page, redesign, "make it
 look good", frontend look-and-feel), load `reference/ui-ux.md` — it makes the vendored taste-skill v2
 (`reference/taste-skill-v2.md`) the design authority and adds a Designer role + a pre-flight QA gate.
@@ -92,6 +98,7 @@ Roles are dispatched as subagents, each a fresh context with the minimum vault r
 | `reference/pipeline.md` | Always — the phase definitions and exit gates for the detected mode |
 | `reference/experts.md` | When dispatching any phase — role → agent-type → model-tier map |
 | `reference/vault.md` | At Intake (create vault) and whenever a phase passes state |
+| `reference/domain-rules.md` | At Intake — route the objective to its `ten-rules` domain(s); distill the ≤10 priority rules carried through the run |
 | `reference/market-research.md` | GREENFIELD Validate phase — demand-validation methods |
 | `reference/quality-gates.md` | Verify, Review, and Deliver phases — what "production-ready" means |
 | `reference/debugging.md` | DEBUG mode Diagnose phase — hypothesis-driven root-cause method |

@@ -22,6 +22,12 @@ Therefore: **GREENFIELD** Validate/Plan/scaffold phases fan out; **DEBUG** and *
 All modes pause at **Human Feedback** and require explicit human approval before the first
 implementation write (antstack.com; developersdigest.tech Plan Mode guidance).
 
+## Domain rules (advisory, all modes)
+
+At Intake, route the objective to its `ten-rules` domain(s) and record a `## Priority Rules` digest
+(≤10 abstract rules) in `README.md`. Plan/Build honor it; the committee checks the diff against it.
+It is **not a gate** — it never blocks or overrides the hard gates. Mechanism: `domain-rules.md`.
+
 ## UI/UX overlay (when the deliverable is visual UI)
 
 On objectives that ship user-facing look-and-feel, layer the taste-skill v2 overlay onto whichever
