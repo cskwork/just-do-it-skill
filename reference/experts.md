@@ -34,6 +34,13 @@ precise pass writes. On **UI/UX jobs** (`reference/ui-ux.md`) the Designer repla
 editor for visual surfaces, and the QA gate adds the taste-skill v2 Pre-Flight Check (§14); the
 committee and adversarial Verify are unchanged — the Designer never self-approves.
 
+Plan grounding (Architect, Plan phase): before freezing `plan.md`, the Architect self-runs the
+grounding pass — a `grill-with-docs`-style self-grill for feature work, an
+`improve-codebase-architecture`-style deepening pass for refactor objectives — and **answers each
+challenge itself** from the explored docs (`CONTEXT.md`, ADRs, `brief.md`, the map), never by asking
+the human. The human's single approval stays the later Human Feedback gate. Method:
+`reference/plan-grounding.md`.
+
 ## Parallel-wave dispatch (from ultrawork)
 
 1. Classify tasks by independence; build a dependency matrix.

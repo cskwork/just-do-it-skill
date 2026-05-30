@@ -45,7 +45,7 @@ Read the objective and classify it. State the detected mode to the user in one l
 |---|---|---|
 | "build / make / ship / launch a new app/product/site/tool" | **GREENFIELD** | Intake → **Validate** → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
 | "fix / broken / failing / crash / hang / regression / why does" | **DEBUG** | Intake → Reproduce → Diagnose → **Human Feedback** → Fix → Verify → Deliver |
-| "add / integrate X into existing/legacy/our codebase" | **LEGACY** | Intake → Explore → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
+| "add / integrate X into existing/legacy codebase" — or "improve / refactor / decouple / clean up / make testable" existing code | **LEGACY** | Intake → Explore → Plan → **Human Feedback** → Build → Verify → QA → Deliver |
 | "explain / understand / teach me / how does X work" (learn, no code change) | **LEARN** | Intake → Source → **Bridge** → Teach loop → **Check (explain-back)** → Journal |
 
 If ambiguous, ask ONE clarifying question, then proceed. Mode picks the pipeline; the gates and the
@@ -69,6 +69,12 @@ Plan/Build/Review quality; they never replace or override the hard gates. Mechan
 look good", frontend look-and-feel), load `reference/ui-ux.md` — it makes the vendored taste-skill v2
 (`reference/taste-skill-v2.md`) the design authority and adds a Designer role + a pre-flight QA gate.
 Loaded on demand only; modes and gates are unchanged.
+
+**Plan grounding**: in the Plan phase, before `plan.md` freezes, the planner grounds it against the
+project's own domain/architecture — agent-run, no human round-trip (the human's one approval stays
+the later Human Feedback gate). Feature/novel work self-runs a `grill-with-docs`-style design-tree
+grill, **answering each challenge itself** from the explored docs; "improve / refactor" objectives
+self-run an `improve-codebase-architecture`-style deepening pass. Method: `reference/plan-grounding.md`.
 
 ## The non-negotiable gates
 
@@ -107,6 +113,8 @@ Roles are dispatched as subagents, each a fresh context with the minimum vault r
 | `reference/market-research.md` | GREENFIELD Validate phase — demand-validation methods |
 | `reference/quality-gates.md` | Verify, Review, and Deliver phases — what "production-ready" means |
 | `reference/debugging.md` | DEBUG mode Diagnose phase — runs the `diagnose` skill's feedback-loop method |
+| `reference/learn.md` | LEARN mode — the teach/check flow + journaling pointer |
+| `reference/plan-grounding.md` | Plan phase (GREENFIELD/LEGACY) — agent-run domain/architecture grounding before the plan freezes |
 | `reference/qa.md` | QA phase — drive the running web/CLI app (agent-browser via subagent), record as-is/to-be evidence |
 | `reference/ui-ux.md` | When the objective ships visual UI — the taste-skill v2 overlay (Plan/Build/QA) |
 | `reference/taste-skill-v2.md` | Designer Build + QA pre-flight on UI/UX jobs — vendored design authority (large; load only then) |
@@ -131,6 +139,7 @@ Roles are dispatched as subagents, each a fresh context with the minimum vault r
 ## Final checklist (before claiming done)
 
 - [ ] Mode stated and correct pipeline run
+- [ ] Plan grounded (`reference/plan-grounding.md`, agent-answered) before the plan froze
 - [ ] Human Feedback stage produced the plain-language and technical briefs, and approval was recorded before Build/Fix
 - [ ] Every `claims.md` entry has a GREEN verdict in `verification.md` from the adversarial pass
 - [ ] architect + security + code-review all approved

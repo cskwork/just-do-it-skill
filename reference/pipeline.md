@@ -34,6 +34,14 @@ On objectives that ship user-facing look-and-feel, layer the taste-skill v2 over
 mode is running: a Design Read + three dials at **Plan**, a Designer at **Build**, and the taste
 Pre-Flight Check as an added **QA** gate. It does not change phases or gates — see `reference/ui-ux.md`.
 
+## Plan grounding (GREENFIELD & LEGACY)
+
+Between Plan and Human Feedback, the planner grounds `plan.md` against the project's own
+domain/architecture — **agent-run**: it answers each grill challenge itself from the explored docs,
+with no human round-trip. Feature/novel work uses a `grill-with-docs`-style self-grill; "improve /
+refactor" objectives use an `improve-codebase-architecture`-style deepening pass. The human's one
+approval stays the later Human Feedback gate. Full method: `reference/plan-grounding.md`.
+
 ## Artifact-skip gates (from autopilot)
 
 Before running a phase, check the vault for an upstream artifact that already satisfies it and skip:
@@ -50,7 +58,7 @@ Log every skip to `README.md`.
 |---|---|---|---|---|
 | **Intake** | Turn objective into a brief (goal, audience, done-criteria, non-goals) | objective | `brief.md`, `state.json` | `brief.md` has explicit, machine-checkable acceptance criteria |
 | **Validate** | Prove real demand + scope an MVP (see `market-research.md`) | `brief.md` | `brief.md` (`## Validation`) | `templates/validate-gate.sh <vault>` exits 0 — the script checks that `brief.md` contains a line-start or `## `-prefixed `Decision: GO`; **NO-GO or no GO line exits non-zero, Build does not open**. Machine-checkable parallel to `delivery-gate.sh`. |
-| **Plan** | Decompose into independently-testable slices; choose stack; define contracts | `brief.md` | `plan.md` (frozen; incl. Architecture + Contracts sections) | `plan.md` task table exists, every slice ≤5 files / ≤~500 lines, each has an acceptance check. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
+| **Plan** | Ground the plan (see Plan grounding), then decompose into independently-testable slices; choose stack; define contracts | `brief.md` | `plan.md` (frozen; incl. Architecture + Contracts sections) | `plan.md` task table exists, every slice ≤5 files / ≤~500 lines, each has an acceptance check. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
 | **Human Feedback** | Ask the human to approve, revise, or stop before implementation | `brief.md`, `plan.md` | `plan.md` (`## Human Feedback`), `state.json.approval` | `plan.md` has the required two briefs; human explicitly approves `Build`; `node templates/human-feedback-gate.mjs <vault> Build` exits 0. No source-tree write before this. |
 | **Build** | Implement each slice (architect→editor split); write a claim per slice | `plan.md` | code, `claims.md` (append-only) | local tests for the slice pass + a `claims.md` entry with a `run-to-prove` command |
 | **Verify** | Adversary re-runs every claim from clean state (see `quality-gates.md`) | `claims.md`, code | `verification.md` | every claim GREEN, ending in one aggregate `verdict: GREEN` line (no line-start `verdict: RED`); any RED rewinds to Build |
@@ -92,7 +100,7 @@ through Human Feedback; approval before Build.
 |---|---|---|---|---|
 | **Intake** | Feature spec + acceptance criteria | objective | `brief.md` | acceptance criteria stated |
 | **Explore** | Map the affected code with file:line evidence (use `explore` skill/agent) | repo | `README.md` (codebase map + citations) | entry points, call paths, blast radius documented with citations |
-| **Plan** | Surgical change plan: smallest blast radius, reuse existing utilities | map | `plan.md` (frozen) | plan touches only what the feature requires; reuse noted. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
+| **Plan** | Ground the plan (see Plan grounding), then a surgical change plan: smallest blast radius, reuse existing utilities | map | `plan.md` (frozen) | plan touches only what the feature requires; reuse noted. On exit, orchestrator records `shasum -a 256 plan.md` into `state.json.plan_hash`. |
 | **Human Feedback** | Explain the implementation plan, then wait for human approval | `README.md`, `plan.md` | `plan.md` (`## Human Feedback`), `state.json.approval` | `plan.md` has the required two briefs; human explicitly approves `Build`; `node templates/human-feedback-gate.mjs <vault> Build` exits 0. No source-tree write before this. |
 | **Build** | Implement matching existing style; no unrelated refactors | plan | code, `claims.md` | slice tests pass; no formatting/rename churn in unrelated files |
 | **Verify** | Adversary re-runs claims; full existing suite must stay green | claims, suite | `verification.md` | all claims GREEN + pre-existing suite still GREEN (no regressions) |
