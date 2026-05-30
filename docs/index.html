@@ -81,6 +81,9 @@
   .card h3{margin:0 0 4px;font-size:calc(19px * var(--fs))}
   .card .mode{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
   .card.green .mode{color:var(--acc)} .card.amber .mode{color:var(--warn)} .card.blue .mode{color:var(--acc2)}
+  .card.violet .mode{color:#c4b5fd}
+  .card.learncard{margin-top:16px;border-color:#372a57;background:linear-gradient(180deg,#15111f,#0e0c16)}
+  .card.learncard .pipe b{color:#ddd6fe}
   .card p{color:var(--dim);font-size:calc(15.5px * var(--fs));line-height:1.62;margin:8px 0 12px}
   .pipe{font-family:var(--mono);font-size:calc(12px * var(--fs));color:var(--faint);line-height:1.8;word-spacing:-1px;overflow-wrap:anywhere}
   .pipe b{color:var(--ink);font-weight:600}
@@ -222,14 +225,15 @@
 </div></section>
 
 <section id="modes"><div class="wrap">
-  <h2><span class="en">Three modes, one command</span><span class="ko">세 가지 모드, 하나의 명령</span></h2>
+  <h2><span class="en">Four modes, one command</span><span class="ko">네 가지 모드, 하나의 명령</span></h2>
   <p class="lead en">The skill reads your objective and picks the right pipeline — and how much to
     parallelize. Broad work (research, scaffolding several files) fans out to many agents at once;
-    focused work (one bug, one feature) stays with a single driver. Every mode pauses at Human
-    Feedback before touching code.</p>
+    focused work (one bug, one feature) stays with a single driver. The three code-writing modes
+    pause at Human Feedback before touching code. A fourth mode, LEARN, writes no code at all.</p>
   <p class="lead ko">스킬이 목표를 읽고 알맞은 파이프라인과 병렬화 수준을 고릅니다. 폭넓은 작업(리서치, 여러 파일
     스캐폴딩)은 여러 에이전트로 한꺼번에 펼치고, 집중된 작업(버그 하나, 기능 하나)은 단일 드라이버가 맡습니다.
-    모든 모드는 코드를 건드리기 전에 Human Feedback에서 당신의 승인을 요청합니다.</p>
+    코드를 쓰는 세 모드는 코드를 건드리기 전에 Human Feedback에서 승인을 요청합니다. 네 번째 모드 LEARN은
+    아예 코드를 쓰지 않습니다.</p>
   <div class="grid3">
     <div class="card green">
       <div class="mode">greenfield</div>
@@ -255,6 +259,17 @@
         통과함을 증명합니다 — 회귀 없음.</p>
       <div class="pipe">Intake → Explore → Plan → Human Feedback → Build → Verify → QA → Deliver</div>
     </div>
+  </div>
+  <div class="card violet learncard">
+    <div class="mode">learn · no code</div>
+    <h3><span class="en">Understand something</span><span class="ko">무언가 이해하기</span></h3>
+    <p class="en">"Explain X", "how does this work". No code, no implementation gates. It gathers the
+      facts first, bridges to what you already know, then teaches in a question-driven loop — and is
+      only done when <b>you can explain the idea back, unaided</b>. The session is journaled to <code>learn/</code>.</p>
+    <p class="ko">"X를 설명해줘", "이건 어떻게 동작해?" — 코드도, 구현 게이트도 없습니다. 먼저 사실을 모으고,
+      당신이 이미 아는 것에 연결한 뒤, 질문 중심 루프로 가르칩니다. <b>당신이 그 개념을 스스로 설명해낼 수
+      있을 때에만</b> 완료됩니다. 세션은 <code>learn/</code>에 기록됩니다.</p>
+    <div class="pipe">Intake → Source → Bridge → <b>Teach loop</b> → Check (explain-back) → Journal</div>
   </div>
 </div></section>
 
@@ -305,6 +320,37 @@
     <div class="step">QA<small class="en">+ nearby flows</small><small class="ko">+ 주변 플로우</small></div><div class="arr">→</div>
     <div class="step gate">Deliver</div>
   </div>
+
+  <h3 class="sub2"><span class="en">LEARN — understand something (no code)</span><span class="ko">LEARN — 무언가 이해하기 (코드 없음)</span></h3>
+  <div class="flow">
+    <div class="step">Intake<small class="en">topic</small><small class="ko">주제</small></div><div class="arr">→</div>
+    <div class="step">Source<small class="en">gather, read-only</small><small class="ko">수집·읽기 전용</small></div><div class="arr">→</div>
+    <div class="step">Bridge<small class="en">analogy to what you know</small><small class="ko">아는 것에 비유</small></div><div class="arr">→</div>
+    <div class="step">Teach loop<small class="en">Feynman + Socratic</small><small class="ko">파인만 + 소크라테스</small></div><div class="arr">→</div>
+    <div class="step gate">Check<small class="en">explain-back, unaided</small><small class="ko">스스로 설명</small></div><div class="arr">→</div>
+    <div class="step">Journal<small class="en">learn/</small><small class="ko">learn/</small></div>
+  </div>
+  <p class="note en">LEARN skips the build/verify/deliver gates entirely. Its delivery gate is human:
+    you restate every key term and the whole idea in your own words. Until you can, it loops.</p>
+  <p class="note ko">LEARN은 build/verify/deliver 게이트를 모두 건너뜁니다. 이 모드의 딜리버리 게이트는
+    사람입니다 — 핵심 용어와 전체 개념을 당신의 말로 다시 설명해야 합니다. 그럴 수 있을 때까지 루프를 돕니다.</p>
+
+  <h3 class="sub2"><span class="en">Before it builds: a grounded plan, shaped by your domain's rules</span><span class="ko">구현에 들어가기 전: 도메인 규칙으로 다듬은, 근거 있는 계획</span></h3>
+  <p class="en" style="color:var(--dim)">Two advisory layers sharpen the plan before the Human Feedback
+    gate — neither replaces a hard gate. <b>Plan grounding</b>: in the Plan phase the planner self-runs a
+    design-tree grill against the project's own docs and architecture (<code>CONTEXT.md</code>, ADRs, the
+    explored map) and <em>answers each challenge itself</em> — feature work sharpens terms and contracts,
+    "improve / refactor" work hunts for deepening opportunities. <b>Domain priority rules</b>: right after
+    mode detection the objective is routed through the <code>ten-rules</code> skill and distilled into ≤10
+    abstract priority rules (e.g. web-design + ecommerce), recorded once and carried into Plan, Build, and
+    Review.</p>
+  <p class="ko" style="color:var(--dim)">두 가지 advisory 레이어가 Human Feedback 게이트 전에 계획을
+    다듬습니다 — 둘 다 하드 게이트를 대체하지 않습니다. <b>Plan grounding</b>: Plan 단계에서 플래너가
+    프로젝트 자체 문서·아키텍처(<code>CONTEXT.md</code>, ADR, 탐색 맵)에 대해 디자인 트리 그릴을 스스로
+    돌리고 <em>각 질문에 직접 답합니다</em> — 기능 작업은 용어·계약을 날카롭게, "개선/리팩터" 작업은 심화
+    기회를 찾습니다. <b>Domain priority rules</b>: 모드 감지 직후 목표를 <code>ten-rules</code> 스킬로
+    라우팅해 ≤10개의 추상적 우선순위 규칙(예: web-design + ecommerce)으로 정제하고, 한 번 기록해 Plan·
+    Build·Review까지 가져갑니다.</p>
 
   <h3 class="sub2"><span class="en">Why it catches real bugs: the builder never grades itself</span><span class="ko">진짜 버그를 잡는 이유: 구현자는 자기 일을 채점하지 않습니다</span></h3>
   <div class="diagram"><pre>
@@ -402,6 +448,8 @@
     <tr class="ko"><td>아키텍트</td><td><code>architect</code></td><td>Opus</td><td>계획·코드베이스 맵·계약</td></tr>
     <tr class="en"><td>Builder</td><td><code>executor</code></td><td>Sonnet*</td><td>implement a slice + write a claim</td></tr>
     <tr class="ko"><td>구현자</td><td><code>executor</code></td><td>Sonnet*</td><td>슬라이스 구현 + 주장 작성</td></tr>
+    <tr class="en"><td>Designer†</td><td><code>designer</code></td><td>Sonnet</td><td>UI/UX jobs — build to taste-skill v2 rules</td></tr>
+    <tr class="ko"><td>디자이너†</td><td><code>designer</code></td><td>Sonnet</td><td>UI/UX 작업 — taste-skill v2 규칙대로 구현</td></tr>
     <tr class="en"><td>Verifier</td><td><code>verifier</code> / <code>critic</code></td><td>Opus</td><td>adversarially re-run every claim</td></tr>
     <tr class="ko"><td>검증자</td><td><code>verifier</code> / <code>critic</code></td><td>Opus</td><td>모든 주장을 적대적으로 재실행</td></tr>
     <tr class="en"><td>Committee</td><td><code>security-reviewer</code> · <code>code-reviewer</code></td><td>Sonnet</td><td>independent review before Deliver</td></tr>
@@ -411,8 +459,12 @@
     <tr class="en"><td>Debugger</td><td><code>debugger</code> / <code>tracer</code></td><td>Opus</td><td>reproduce + find the root cause</td></tr>
     <tr class="ko"><td>디버거</td><td><code>debugger</code> / <code>tracer</code></td><td>Opus</td><td>재현 + 근본 원인 추적</td></tr>
   </table>
-  <p class="note en">*Opus when the slice is new or algorithm-heavy.</p>
-  <p class="note ko">*새롭거나 알고리즘이 무거운 슬라이스에는 Opus.</p>
+  <p class="note en">*Opus when the slice is new or algorithm-heavy. †Designer joins only on jobs that
+    ship visual UI — it builds against the vendored taste-skill v2 design authority, and QA adds a
+    pre-flight design check. It never self-approves: the adversarial Verify and committee still gate Deliver.</p>
+  <p class="note ko">*새롭거나 알고리즘이 무거운 슬라이스에는 Opus. †디자이너는 시각적 UI를 출시하는 작업에만
+    합류합니다 — 내장된 taste-skill v2 디자인 권위를 기준으로 구현하고, QA에 사전 점검 게이트가 추가됩니다.
+    스스로 승인하지 않습니다: 적대적 Verify와 위원회가 여전히 Deliver를 통제합니다.</p>
 </div></section>
 
 <section id="gates"><div class="wrap">
@@ -450,10 +502,10 @@
 
 <section id="proof"><div class="wrap">
   <h2><span class="en">Proof it works</span><span class="ko">동작 증명</span></h2>
-  <p class="lead en">All three modes were run end-to-end on one real, zero-dependency service (68 tests).
+  <p class="lead en">All three code-writing modes were run end-to-end on one real, zero-dependency service (68 tests).
     The adversarial check caught a real defect in 2 of 3 runs — bugs that passed the builder's own
     green tests. The full audit trail ships in <code>examples/url-shortener/docs/changelog/</code>.</p>
-  <p class="lead ko">세 모드 모두 실제 무의존성 서비스 하나(테스트 68개)에서 엔드투엔드로 돌렸습니다. 적대적
+  <p class="lead ko">코드를 쓰는 세 모드 모두 실제 무의존성 서비스 하나(테스트 68개)에서 엔드투엔드로 돌렸습니다. 적대적
     검증이 3번 중 2번에서 진짜 결함을 잡아냈습니다 — 구현자 자신의 green 테스트를 통과한 버그들입니다.
     전체 감사 기록은 <code>examples/url-shortener/docs/changelog/</code>에 함께 담겨 있습니다.</p>
   <div class="evi">
