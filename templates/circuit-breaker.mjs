@@ -5,9 +5,12 @@
 //   <state.json>            the run's state file
 //   <normalized-signature>  the failure fingerprint the orchestrator computed for this cycle
 //
-// The caller MUST normalize the signature before passing it, so the same failure maps to the
+// The caller SHOULD normalize the signature before passing it, so the same failure maps to the
 // same key across cycles. Normalization rule (keep it identical everywhere):
 //   first failing assertion message + file:line, lowercased, stack frames trimmed.
+// As a backstop the breaker ALSO normalizes defensively (collapse whitespace + trim + lowercase),
+// so trivial caller drift — a trailing space, a tab vs a space, casing — cannot mint a distinct
+// key and silently defeat the trip. It does NOT merge semantically different signatures.
 //
 // Behavior: increments state.json.error_signatures[<sig>], persists, and exits 1 (TRIP) once that
 // count reaches state.json.circuit_breaker_threshold (default 3). On a trip the orchestrator must
@@ -16,9 +19,17 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 
-const [statePath, signature] = process.argv.slice(2);
-if (!statePath || !signature) {
+const [statePath, rawSignature] = process.argv.slice(2);
+if (!statePath || !rawSignature) {
   console.error("usage: circuit-breaker.mjs <state.json> <normalized-signature>");
+  process.exit(2);
+}
+
+// Defensive normalization backstop — see header. Collapse all whitespace runs to one space,
+// trim, lowercase, so drift in the caller's signature can't defeat the breaker.
+const signature = rawSignature.replace(/\s+/g, " ").trim().toLowerCase();
+if (!signature) {
+  console.error("circuit-breaker: signature is empty after normalization");
   process.exit(2);
 }
 

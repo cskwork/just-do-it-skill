@@ -29,6 +29,12 @@ command/observation and its pass criterion.
 
 ## Tier A — literal gate unit tests (deterministic)
 
+**Runnable harness:** every Tier A scenario below — plus the A5 GREEN-then-RED case that used to be
+manual-only — is automated in `tests/gate-scenarios.test.sh`. Run `bash tests/gate-scenarios.test.sh`
+from the repo root; it exits 0 only if all cases pass, and each case asserts BOTH the gate's exit
+code AND an output substring (two independent signals). The hand matrices below remain the
+specification the harness encodes.
+
 ### A0 — human-feedback-gate.mjs
 
 Run `templates/human-feedback-gate.mjs <vault> <Build|Fix>` against hand-built vault fixtures.
@@ -56,7 +62,7 @@ is `true`/`false` to isolate gate logic from a real suite.
 | A2 | brief only | FAIL "plan.md missing" |
 | A3 | brief+plan, no verification | FAIL "verification.md missing" |
 | A4 | verification with no `verdict: GREEN` line | FAIL "no 'verdict: GREEN'" |
-| A5 | verification.md contains a `verdict: GREEN` line AND a subsequent line-start `verdict: RED` | FAIL "verdict: RED remains" — note: the paste-run harness below has no explicit A5 case; test manually |
+| A5 | verification.md contains a `verdict: GREEN` line AND a subsequent line-start `verdict: RED` | FAIL "verdict: RED remains" — automated as case 2.5 in `tests/gate-scenarios.test.sh` |
 | A6 | brief has `Decision: GO` + prose mentioning NO-GO | PASS |
 | A7 | brief has `Decision: NO-GO` | FAIL "decision is NO-GO" |
 | A8 | brief has no `Decision:` line | PASS — gate rule: *if* a `Decision:` line is present it must be `GO`; greenfield writes one, DEBUG/LEGACY do not (validation skipped for them) |
