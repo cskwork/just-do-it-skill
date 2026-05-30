@@ -6,8 +6,11 @@ to a single driving agent** (`debugger`/`tracer`, Opus), spawning isolated helpe
 genuinely independent probes — e.g. "grep this log corpus" while "reproduce in env B" — each
 returning a summary to the vault (Cognition single-agent guidance; LangChain task-topology framing).
 
-This is the disciplined loop the existing `systematic-debugging` / `diagnose` skills also enforce —
-reuse them; this file is the DEBUG-mode contract.
+Run the **`diagnose`** skill as the engine of Reproduce + Diagnose — its **Phase 1 "build a feedback
+loop"** IS the Reproduce exit gate (no loop you believe in → no fix). This file is the DEBUG-mode
+contract around it. For a web/UI bug the loop is a headless-browser script (diagnose loop type 4):
+drive it with agent-browser via the `qa-tester` subagent (`reference/qa.md`) so page output stays out
+of the conductor's context.
 
 ## Open in read-only Plan Mode
 
@@ -18,8 +21,9 @@ Feedback packet before the first write (antstack.com; developersdigest.tech Plan
 ## The loop
 
 1. **Reproduce (red first).** Build a deterministic, *failing* reproduction — ideally a test, else a
-   scripted repro — that fails on current code **in a clean sandbox**. No repro → no fix; an
-   intermittent bug needs its nondeterminism pinned first. Record the `run-to-prove` in `claims.md`.
+   scripted repro — that fails on current code **in a clean sandbox** (a fresh `git worktree` at HEAD —
+   no install, no uncommitted noise). No repro → no fix; an intermittent bug needs its nondeterminism
+   pinned first. Record the `run-to-prove` in `claims.md`.
 2. **Localize.** Narrow to the smallest code region. `git bisect` to find the introducing commit when
    it's a regression; binary-search the input/state space; add instrumentation/logging rather than
    guessing.

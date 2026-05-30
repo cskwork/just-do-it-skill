@@ -13,8 +13,9 @@ production code itself — it decomposes the objective, dispatches **expert suba
 
 The design is borrowed from `oh-my-symphony` (gated lanes, a single shared vault, untrusted
 `claims.md` re-verified by an adversary, a literal-bash delivery gate that is never edited to pass)
-but stripped of the heavy Symphony CLI / TUI / worktree infrastructure — everything runs in-session
-with the `Task`/`Agent` tool, so there is nothing to install.
+but stripped of the heavy Symphony CLI / TUI / per-lane-worktree orchestration — everything runs
+in-session with the `Task`/`Agent` tool, so there is nothing to install. (A plain `git worktree` is
+still used as the clean-state sandbox for Verify and parallel Build — git is already present.)
 
 ## Why this exists
 
@@ -75,7 +76,8 @@ These are the spine. Never weaken or skip them; never edit a gate to make it pas
 2. **Plan freezes scope**: `plan.md` is written once and frozen; Build/Fix implements it, does not redesign.
 3. **Human Feedback before implementation**: after the brief, reproduction/diagnosis, and plan are ready, pause for explicit human approval. `plan.md` must contain a top plain-language brief and a lower technical novice-dev brief; `templates/human-feedback-gate.mjs <vault> <Build|Fix>` must pass before Build/Fix opens.
 4. **Builder ≠ Verifier**: the agent that writes code does not get to approve it. A fresh **adversarial
-   Verify** agent re-runs every `run-to-prove` command in `claims.md` from a clean state.
+   Verify** agent re-runs every `run-to-prove` command in `claims.md` from a clean state — a fresh
+   `git worktree` at the build commit, never the builder's dirty tree.
 5. **Multi-expert review before deliver**: architect + security-reviewer + code-reviewer run in parallel; ALL must approve (`reference/experts.md`).
 6. **Literal delivery gate**: `templates/delivery-gate.sh` must exit 0 — required artifacts present, aggregate `verdict: GREEN`, `Decision: GO` for greenfield, project tests pass. Skill cannot announce "done" otherwise.
 7. **Bounded retry + circuit breaker**: max 5 fix cycles per phase; the same normalized error signature 3x trips `templates/circuit-breaker.mjs` → stop, root-cause to user. Mechanism: `reference/vault.md`.
@@ -101,7 +103,8 @@ Roles are dispatched as subagents, each a fresh context with the minimum vault r
 | `reference/domain-rules.md` | At Intake — route the objective to its `ten-rules` domain(s); distill the ≤10 priority rules carried through the run |
 | `reference/market-research.md` | GREENFIELD Validate phase — demand-validation methods |
 | `reference/quality-gates.md` | Verify, Review, and Deliver phases — what "production-ready" means |
-| `reference/debugging.md` | DEBUG mode Diagnose phase — hypothesis-driven root-cause method |
+| `reference/debugging.md` | DEBUG mode Diagnose phase — runs the `diagnose` skill's feedback-loop method |
+| `reference/qa.md` | QA phase — drive the running web/CLI app (agent-browser via subagent), record as-is/to-be evidence |
 | `reference/ui-ux.md` | When the objective ships visual UI — the taste-skill v2 overlay (Plan/Build/QA) |
 | `reference/taste-skill-v2.md` | Designer Build + QA pre-flight on UI/UX jobs — vendored design authority (large; load only then) |
 

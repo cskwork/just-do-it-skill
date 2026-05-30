@@ -20,7 +20,7 @@ predictable cost (token spend explains ~80% of multi-agent performance variance 
 | Verifier (adversary) | `verifier` / `critic` | Opus | `claims.md` + source only (harness-enforced — see below) | `verification.md` verdicts |
 | Security reviewer | `security-reviewer` | Sonnet | diff | findings |
 | Code reviewer | `code-reviewer` | Sonnet | diff + `plan.md` | findings |
-| QA | `qa-tester` | Sonnet | running app | `verification.md` (`## QA`) |
+| QA | `qa-tester` | Sonnet | running app | `verification.md` (`## QA`) + `qa/` evidence (drives the app with agent-browser — `reference/qa.md`) |
 | Debugger (DEBUG mode) | `debugger` / `tracer` | Opus | repo, repro | root cause to `README.md` |
 
 **Verifier read-scope isolation** is harness-enforced: dispatch the Verifier subagent with
@@ -42,6 +42,9 @@ committee and adversarial Verify are unchanged — the Designer never self-appro
 3. Use `run_in_background: true` for any op > ~30s (installs, builds, full test runs).
 4. **Gate fan-out behind the topology rule** (`pipeline.md`): only wide-and-shallow work fans out.
    DEBUG / LEGACY feature work stays single-driver with isolated helpers for independent probes.
+5. **Isolate parallel writers in a `git worktree`** — each fanned-out Build slice (and the adversarial
+   Verify) runs in its own `git worktree` off the build commit so concurrent edits never collide and
+   the Verifier re-runs from a genuinely clean tree. No install; remove the worktree when the wave ends.
 
 ## The committee gate (before Deliver)
 
