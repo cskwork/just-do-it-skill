@@ -17,6 +17,7 @@ single Designer driver per surface (topology rule still applies).
 | QA | Run the taste-skill v2 **Pre-Flight Check (§14)** as an added QA gate beside the normal QA. a11y + `prefers-reduced-motion` required. A failed pre-flight rewinds to Build and blocks Deliver — same force as any hard gate. |
 
 Load `reference/taste-skill-v2.md` **only in these phases** — it is large (progressive disclosure).
+The conductor (orchestrator) never loads `reference/taste-skill-v2.md` into its own context. The Plan Architect loads taste §0–§2 only (Design Read, the three dials, system-vs-aesthetic) in its own fresh context; the Build Designer loads the full file in its own fresh context.
 The Designer never self-approves: the adversarial Verify + committee still gate Deliver.
 
 ## Keeping the vendored authority current
