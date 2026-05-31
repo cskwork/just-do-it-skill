@@ -12,9 +12,9 @@ single Designer driver per surface (topology rule still applies).
 
 | Phase | Overlay (in addition to the normal phase work) |
 |---|---|
-| Plan | Write a one-line **Design Read** + set the three dials `DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY` into `plan.md` (taste §0–§1). Choose a real design system vs. an aesthetic (taste §2). These freeze with the plan. |
-| Build | Dispatch the **Designer** role (`reference/experts.md`) reading `plan.md` + `reference/taste-skill-v2.md`; implement to its rules — anti-default, anti-slop, hard em-dash ban, real/generated images (never div-mockups), reduced-motion fallbacks. |
-| QA | Run the taste-skill v2 **Pre-Flight Check (§14)** as an added QA gate beside the normal QA. a11y + `prefers-reduced-motion` required. A failed pre-flight rewinds to Build and blocks Deliver — same force as any hard gate. |
+| Plan | Write a one-line **Design Read** + set the three dials `DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY` into `plan.md` (taste §0–§1). Choose a real design system vs. an aesthetic (taste §2). **Brand alignment**: if the subject is a known product/company, adopt its existing brand color + type as the accent system (e.g. Claude → clay coral `#d97757`) rather than inventing a palette — record it in the Design Read. These freeze with the plan. |
+| Build | Dispatch the **Designer** role (`reference/experts.md`) reading `plan.md` + `reference/taste-skill-v2.md`; implement to its rules — anti-default, anti-slop, hard em-dash ban, real/generated images (never div-mockups), reduced-motion fallbacks, plus the **Hard Visual Bans** in `agents/designer.md` (one locked accent, no gradient text, no gradient-fill buttons off-brand, no colored glow shadows, section-background rhythm). |
+| QA | Run the taste-skill v2 **Pre-Flight Check (§14)** as an added QA gate beside the normal QA. a11y + `prefers-reduced-motion` required. The **Color Consistency Lock** (§14, one accent across all sections) and **THE LILA RULE** (§4.2, no glow / off-brand gradient slop) are **rewind-on-fail** here — same force as any hard gate. A failed pre-flight rewinds to Build and blocks Deliver. |
 
 Load `reference/taste-skill-v2.md` **only in these phases** — it is large (progressive disclosure).
 The conductor (orchestrator) never loads `reference/taste-skill-v2.md` into its own context. The Plan Architect loads taste §0–§2 only (Design Read, the three dials, system-vs-aesthetic) in its own fresh context; the Build Designer loads the full file in its own fresh context.

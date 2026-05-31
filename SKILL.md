@@ -11,6 +11,12 @@ One objective in, a verified result out. The skill is the **conductor**: it neve
 production code itself — it decomposes the objective, dispatches **expert subagents** through a
 **forward-only pipeline**, and refuses to declare success until a **machine-checkable gate** passes.
 
+**Orchestrate only, no matter how small.** Once a run starts, the conductor never edits, writes, runs,
+builds, or fixes anything itself — not even a one-line change. Every unit of work is dispatched to a
+subagent and gated; "too small to delegate" is not a valid reason to do it directly. (If the whole
+objective is a single trivial edit, that belongs in "Do NOT use when" below — handle it outside the
+skill — but inside a run, the conductor's hands stay off the work.)
+
 The design is a set of gated lanes over a single shared vault, with an untrusted `claims.md`
 re-verified by an adversary and a literal-bash delivery gate that is never edited to pass —
 everything runs in-session through your harness's sub-agent mechanism (Claude Code: the `Task`/`Agent`

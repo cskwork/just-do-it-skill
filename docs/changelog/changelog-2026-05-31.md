@@ -1,3 +1,51 @@
+# 2026-05-31 - Conductor orchestrates only, no matter how small
+
+## Decision
+
+`SKILL.md`: add a hard rule under the conductor definition — once a run starts, the conductor never
+edits/writes/runs/builds/fixes anything itself, not even a one-line change; "too small to delegate" is
+invalid. Single-trivial-edit objectives still route to "Do NOT use when" (handle outside the skill).
+
+## Reasoning
+
+- Builder != Verifier and role separation collapse if the conductor quietly does "tiny" work itself —
+  that work then skips claims/Verify/gates. The existing "never writes production code" line did not
+  explicitly forbid small in-run edits; this closes the rationalization.
+
+---
+
+# 2026-05-31 - Harden UI/UX anti-slop enforcement (concrete visual bans + brand alignment)
+
+## Decision
+
+Make the most-violated taste §4.2 / §14 color rules **concrete and brand-aware** in the two
+supergoal-owned UI files, so a UI run can no longer rationalize gradient/glow slop past a soft
+self-audit. The vendored `reference/taste-skill-v2.md` is NOT touched (body-swap-only authority).
+
+- `agents/designer.md`: added a "HARD VISUAL BANS" block the Designer self-audits before writing its
+  `claims.md` entry — one locked accent (adopt the subject's brand color if known, e.g. Claude clay
+  coral `#d97757`); no gradient text; no gradient-fill buttons off-brand; no colored glow shadows (the
+  LILA tell); alternate section-background rhythm.
+- `reference/ui-ux.md`: Plan row gains a **Brand alignment** Design-Read item (known product → adopt its
+  brand color/type as the accent system, don't invent a palette); Build row points at the new Hard
+  Visual Bans; QA row elevates §14 Color Consistency Lock + §4.2 LILA RULE to **rewind-on-fail**.
+
+## Reasoning
+
+- A bkit-vs-supergoal landing-page comparison produced a supergoal page with a 3-color gradient system,
+  gradient headline text, gradient-fill buttons, and colored button glow — exactly the slop taste §4.2
+  (max 1 accent, THE LILA RULE, COLOR CONSISTENCY LOCK) and §14 already ban. Root cause was NOT a
+  missing rule: the comparison's emulated run never loaded the `ui-ux.md` overlay -> `taste-skill-v2.md`
+  -> Pre-Flight path, so the gate never bound. The real, transferable weakness is that the rules are
+  soft self-audit and the specific failure modes we saw (gradient *text*, gradient *buttons*, glow
+  *shadows*, brand-misaligned palette) are not named as explicit checkboxes — easy to rationalize past.
+- Fix targets enforcement, not taste: name the concrete bans where the Designer reads them, add
+  brand-color adoption to the frozen plan (so "known product" pages default to the real brand accent
+  instead of an invented multi-hue palette), and mark the color/glow Pre-Flight items as hard
+  rewind-on-fail. Vendored authority stays verbatim; all edits live in supergoal-owned files.
+
+---
+
 # 2026-05-31 - Plan grounding cherry-pick recovery
 
 ## Decision
